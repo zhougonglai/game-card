@@ -1,143 +1,106 @@
-<script context="module">
-  export async function load({ fetch }) {
-    const res = await fetch('https://api.spacex.land/graphql', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        query: `{
-            launchesPast(limit: 10) {
-                mission_name
-                launch_date_local
-                links {
-                    video_link
-                }
-            }
-        }`
-      })
-    });
-
-    if (res.ok) {
-      const { data } = await res.json();
-      return {
-        props: {
-          launches: data.launchesPast
-        }
-      };
+<script default>
+  import Modal from '$lib/Modal.svelte';
+  let imgs = [
+    {
+      url: '/1.png',
+      label: '混合体2020showreel'
+    },
+    {
+      url: '/2.png',
+      label: 'LOL-太空律动'
+    },
+    {
+      url: '/3.png',
+      label: '热血航线',
+      video: '/video/3.mp4'
+    },
+    {
+      url: '/4.png',
+      label: '阴阳师×鬼灭 联动pv'
+    },
+    {
+      url: '/5.png',
+      label: 'QQ炫舞手游-6月版本'
+    },
+    {
+      url: '/6.png',
+      label: '王者荣耀-破晓版本'
+    },
+    {
+      url: '/7.png',
+      label: 'LOL冠军手办'
+    },
+    {
+      url: '/8.jpg',
+      label: '奇迹暖暖・废墟有生'
     }
+  ];
 
-    return {
-      status: res.status,
-      error: new Error(`Error fetching GraphQL data`)
-    };
-  }
+  let visible = false;
+  let data = '';
+  const openModal = (video) => {
+    data = video;
+    visible = true;
+  };
+
+  const modalOpration = ({ detail }) => {
+    console.log('modalOpration', detail);
+    visible = detail;
+  };
 </script>
 
-<script>
-  export let launches;
-</script>
-
-<h1>SpaceX Launches</h1>
-<p>
-  This is an example <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://svelte.dev">SvelteKit</a
-  >
-  application fetching GraphQL data from the public
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://api.spacex.land/graphql">SpaceX API</a
-  >. View source on
-  <a
-    class="link"
-    target="_blank"
-    rel="noopener"
-    href="https://github.com/leerob/sveltekit-graphql">GitHub</a
-  >.
-</p>
-<ul>
-  {#each launches as launch}
-    <li>
-      <a
-        class="card-link"
-        target="_blank"
-        rel="noopener"
-        href={launch.links.video_link}
+<section>
+  <div class="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    {#each imgs as img}
+      <div
+        class="cursor-pointer game relative overflow-hidden"
+        on:click={() => openModal(img.video)}
       >
-        <h2>{launch.mission_name}</h2>
-        <p>{new Date(launch.launch_date_local).toLocaleString()}</p>
-      </a>
-    </li>
-  {/each}
-</ul>
-<footer>
-  <p>
-    Created with <a
-      class="link"
-      target="_blank"
-      rel="noopener"
-      href="https://svelte.dev">SvelteKit</a
-    >
-    and deployed with
-    <a class="link" target="_blank" rel="noopener" href="https://vercel.com"
-      >▲ Vercel</a
-    >.
-  </p>
-</footer>
+        <img src={img.url} alt={img.label} />
+        <div class="label rounded-sm px-2 leading-7 absolute">{img.label}</div>
+      </div>
+    {/each}
+  </div>
+</section>
 
-<style>
-  :global(body) {
-    font-family: Menlo, Consolas, Monaco, Liberation Mono, Lucida Console,
-      monospace;
-    background-color: #fafafa;
-    max-width: 650px;
-    margin: 32px auto;
-    padding: 0 16px;
-  }
-  h1 {
-    letter-spacing: -0.025em;
-  }
-  h2 {
-    font-size: 18px;
-  }
-  ul {
-    list-style: none;
-    padding: 0;
-    margin-top: 32px;
-  }
-  li {
-    border: 1px solid #eaeaea;
-    border-radius: 8px;
-    margin-bottom: 16px;
-    background-color: white;
-    transition: 0.15s box-shadow ease-in-out;
-  }
-  li:hover {
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.12);
-  }
-  p {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.75;
-  }
-  a {
-    color: #0070f3;
-    text-decoration: none;
-  }
-  .card-link {
-    padding: 8px 24px;
-    display: block;
-  }
-  .link {
-    transition: 0.15s text-decoration ease-in-out;
-    color: #0761d1;
-  }
-  .link:hover {
-    text-decoration: underline;
+<Modal {visible} {data} on:close={modalOpration} />
+
+<style lang="scss">
+  section {
+    .game {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &:hover {
+        .label {
+          top: 50%;
+        }
+        &::after {
+          transform: scale(3, 3);
+        }
+      }
+      .label {
+        top: 150%;
+        left: 50%;
+        transform: translateX(-50%);
+        color: white;
+        border: 1px solid white;
+        transition: all 0.2s ease-in-out;
+        z-index: 2;
+      }
+      &::after {
+        content: '';
+        background: rgba(0, 0, 0, 0.5);
+        position: absolute;
+        z-index: 1;
+        height: 100%;
+        width: 100%;
+        left: 50%;
+        top: 50%;
+        border-radius: 50%;
+        transform: scale(0, 0);
+        transition: all 0.4s;
+      }
+    }
   }
 </style>
