@@ -3,11 +3,13 @@
   let imgs = [
     {
       url: '/1.png',
-      label: '混合体2020showreel'
+      label: '混合体2020showreel',
+      video: '/video/1.mp4'
     },
     {
       url: '/2.png',
-      label: 'LOL-太空律动'
+      label: 'LOL-太空律动',
+      video: '/video/2.mp4'
     },
     {
       url: '/3.png',
@@ -16,23 +18,28 @@
     },
     {
       url: '/4.png',
-      label: '阴阳师×鬼灭 联动pv'
+      label: '阴阳师×鬼灭 联动pv',
+      video: '/video/4.mp4'
     },
     {
       url: '/5.png',
-      label: 'QQ炫舞手游-6月版本'
+      label: 'QQ炫舞手游-6月版本',
+      video: '/video/5.mp4'
     },
     {
       url: '/6.png',
-      label: '王者荣耀-破晓版本'
+      label: '王者荣耀-破晓版本',
+      video: '/video/6.mp4'
     },
     {
       url: '/7.png',
-      label: 'LOL冠军手办'
+      label: 'LOL冠军手办',
+      video: '/video/7.mp4'
     },
     {
       url: '/8.jpg',
-      label: '奇迹暖暖・废墟有生'
+      label: '奇迹暖暖・废墟有生',
+      video: '/video/8.mp4'
     }
   ];
 
@@ -44,7 +51,6 @@
   };
 
   const modalOpration = ({ detail }) => {
-    console.log('modalOpration', detail);
     visible = detail;
   };
 </script>
@@ -57,7 +63,9 @@
         on:click={() => openModal(img.video)}
       >
         <img src={img.url} alt={img.label} />
-        <div class="label rounded-sm px-2 leading-7 absolute">{img.label}</div>
+        <div class="label rounded-sm px-4 py-2 text-lg leading-7 absolute">
+          {img.label}
+        </div>
       </div>
     {/each}
   </div>
@@ -82,7 +90,7 @@
       .label {
         top: 150%;
         left: 50%;
-        transform: translateX(-50%);
+        transform: translate(-50%, -50%);
         color: white;
         border: 1px solid white;
         transition: all 0.2s ease-in-out;
